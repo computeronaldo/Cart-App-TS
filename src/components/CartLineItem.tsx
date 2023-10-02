@@ -1,4 +1,4 @@
-import { ReactElement, ChangeEvent } from "react";
+import { ReactElement, ChangeEvent, memo } from "react";
 import { CartItemType } from "../context/CartProvider";
 import { ReducerAction } from "../context/CartProvider";
 import { ReducerActionType } from "../context/CartProvider";
@@ -89,4 +89,20 @@ const CartLineItem = ({
   return <>{content}</>;
 };
 
-export default CartLineItem;
+const areItemsEqual = (
+  { item: prevItem }: PropsType,
+  { item: nextItem }: PropsType
+): boolean => {
+  return Object.keys(prevItem).every((key) => {
+    return (
+      prevItem[key as keyof CartItemType] ===
+      nextItem[key as keyof CartItemType]
+    );
+  });
+};
+
+const MemoizedCartLineItem = memo<typeof CartLineItem>(
+  CartLineItem,
+  areItemsEqual
+);
+export default MemoizedCartLineItem;
